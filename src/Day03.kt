@@ -19,18 +19,52 @@ fun main() {
 
     }
 
-    fun part2(input: List<String>): Int {
+    fun positive(content:List<Char>):Boolean{
+        val sum = content.map { char-> if (char == '1') 1 else -1 }.fold(0){init ,next -> init+next}
+        return sum>=0
+    }
 
-        return 0
+    fun part2(input: List<String>): Int {
+        val elementNum = input[0].length
+        var oxygenContent = input
+        var co2Content = input
+        for (index in 0 until elementNum){
+            if (oxygenContent.size <2){
+                break
+            }
+            val cur = oxygenContent.map { it[index] }
+            oxygenContent = if (positive(cur)){
+                oxygenContent.filter { it[index] =='1' }
+            }else{
+                oxygenContent.filter { it[index] =='0' }
+            }
+        }
+
+        for (index in 0 until elementNum){
+            if (co2Content.size <2){
+                break
+            }
+            val cur = co2Content.map { it[index] }
+            co2Content = if (!positive(cur)){
+                co2Content.filter { it[index] =='1' }
+            }else{
+                co2Content.filter { it[index] =='0' }
+            }
+        }
+
+//        println("$oxygenContent,$co2Content")
+        val oxygen = Integer.parseInt( oxygenContent.joinToString(separator = ""),2)
+        val c02 = Integer.parseInt( co2Content.joinToString(separator = ""),2)
+        return oxygen*c02
     }
 
     // test if implementation meets criteria from the description, like:
     val testInput = readInput("Day03_test")
     check(part1(testInput) == 198)
-//    check(part2(testInput) == 900)
+    check(part2(testInput) == 230)
 
 
     val input = readInput("Day03")
     println(part1(input))
-//    println(part2(input))
+    println(part2(input))
 }
