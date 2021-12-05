@@ -43,33 +43,40 @@ To avoid the most dangerous areas, you need to determine the number of points wh
 
 Consider only horizontal and vertical lines. At how many points do at least two lines overlap?*/
 fun main() {
-    fun part1(input: List<String>): Int {
-        val lines = input.map { Line.lineFrom(it) }.filter { it.isVertical() || it.isHorizontal() }
-        val coveredNum :HashMap<Point, Int> = HashMap()
-        lines.forEach{line ->
+    fun loadCoveredPointNum(
+        input: List<String>,
+        worker: (Line) -> Boolean
+    ): Int {
+        val lines = input.map { Line.lineFrom(it) }.filter { worker(it) }
+        val coveredNum: HashMap<Point, Int> = HashMap()
+        lines.forEach { line ->
             val points = line.coveredPoints()
             points.forEach { point ->
-                coveredNum[point] = (coveredNum[point]?:0) + 1
+                coveredNum[point] = (coveredNum[point] ?: 0) + 1
             }
         }
 
-        return coveredNum.filter { it.value>=2 }.size
-//        return   0
+        return coveredNum.filter { it.value >= 2 }.size
+    }
 
+    fun part1(input: List<String>): Int {
+        val worker:(Line)->Boolean = {it.isVertical() || it.isHorizontal()}
+        return  loadCoveredPointNum(input, worker)
     }
 
     fun part2(input: List<String>): Int {
-
-        return 0
+        val worker:(Line)->Boolean = {it.isVertical() || it.isHorizontal() || it.isDiagonal()}
+        return loadCoveredPointNum(input, worker)
     }
 
     // test if implementation meets criteria from the description, like:
     val testInput = readInput("day05/Day05_test")
     check(part1(testInput) == 5)
+    check(part2(testInput) == 12)
 
     val input = readInput("day05/Day05")
     println(part1(input))
-//    println(part2(input))
+    println(part2(input))
 }
 
 data class Point(val x:Int,val y:Int){
@@ -89,6 +96,10 @@ data class Line(val start:Point, val end:Point){
         return  start.x == end.x
     }
 
+    fun isDiagonal():Boolean{
+        return Math.abs(start.x-end.x) == Math.abs(start.y-end.y)
+    }
+
     fun coveredPoints():List<Point>{
         if (isHorizontal()){
             val from = Math.min(start.x,end.x)
@@ -100,6 +111,17 @@ data class Line(val start:Point, val end:Point){
             val from = Math.min(start.y,end.y)
             val end = Math.max(start.y,end.y)
             return (from .. end).map { Point(start.x,it) }
+        }
+
+        if (isDiagonal()){
+            val length = Math.abs(end.x -start.x)
+            val (from,to)  = (if (start.x<end.x) Pair(start,end) else Pair(end,start))
+            val yStep = if(from.y< to.y) 1 else -1
+
+            val points =  (from.x .. from.x+length).map {
+                Point(it,from.y+((it-from.x)*yStep))
+            }
+            return points
         }
 
         return emptyList()
