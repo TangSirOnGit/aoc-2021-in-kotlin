@@ -89,14 +89,19 @@ data class Board(val input: List<String>){
 }
 fun main() {
 
+    fun buildBoards(input: List<String>): ArrayList<Board> {
+        val boards = ArrayList<Board>()
+        for (i in 2 until input.size step 6) {
+            val board = Board(input.subList(i, i + 5))
+            boards.add(board)
+        }
+        return boards
+    }
+
     fun part1(input: List<String>): Int {
         var result = 0
        val candidate = input[0].split(",").map { it.toInt() }
-        val boards = ArrayList<Board>()
-        for(i in 2 until input.size step 6){
-            val board = Board(input.subList(i,i+5))
-            boards.add(board)
-        }
+        val boards = buildBoards(input)
         candidate.forEach { num ->
             boards.forEach { board->
                 board.update(num)
@@ -112,16 +117,28 @@ fun main() {
 
 
     fun part2(input: List<String>): Int {
-        return 0
+        var result = 0
+        val candidate = input[0].split(",").map { it.toInt() }
+        val boards = buildBoards(input)
+        candidate.forEach { num ->
+            boards.forEach { board->
+                board.update(num)
+                if (boards.all { it.checkWin() }){
+                    result=   board.calcWinResult() * num
+                    return result
+                }
+            }
+        }
+        return result
     }
 
     // test if implementation meets criteria from the description, like:
     val testInput = readInput("Day04_test")
     check(part1(testInput) == 4512)
-//    check(part2(testInput) == 230)
+    check(part2(testInput) == 1924)
 
 
     val input = readInput("Day04")
     println(part1(input))
-//    println(part2(input))
+    println(part2(input))
 }
