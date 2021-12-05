@@ -1,3 +1,7 @@
+package day04
+
+import readInput
+
 /**
  * --- Day 4: Giant Squid ---
 You're already almost 1.5km (almost a mile) below the surface of the ocean, already so deep that you can't see any sunlight. What you can see, however, is a giant squid that has attached itself to the outside of your submarine.
@@ -133,12 +137,12 @@ fun main() {
     }
 
     // test if implementation meets criteria from the description, like:
-    val testInput = readInput("Day04_test")
+    val testInput = readInput("day04/Day04_test")
     check(part1(testInput) == 4512)
     check(part2(testInput) == 1924)
 
 
-    val input = readInput("Day04")
+    val input = readInput("day04/Day04")
     println(part1(input))
     println(part2(input))
 }

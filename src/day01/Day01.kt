@@ -1,3 +1,7 @@
+package day01
+
+import readInput
+
 /**
 * --- Day 1: Sonar Sweep ---
 You're minding your own business on a ship at sea when the overboard alarm goes off!
@@ -105,10 +109,10 @@ fun main() {
     }
 
     // test if implementation meets criteria from the description, like:
-    val testInput = readInput("Day01_test")
+    val testInput = readInput("day01/Day01_test")
     check(part2(testInput) == 5)
 
-    val input = readInput("Day01")
+    val input = readInput("day01/Day01")
     println(part1(input))
     println(part2(input))
 }
